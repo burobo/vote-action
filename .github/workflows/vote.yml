@@ -10,13 +10,23 @@ on:
 jobs:
   count:
     runs-on: ubuntu-latest
+    outputs:
+        issues: ${{ steps.show-issue-list.outputs.issues }}
     steps:
       - name: clone
         uses: actions/checkout@v3
         with:
           fetch-depth: 2
       - name: show issue list
-        run: gh issue list -l "${LABEL_NAME}"
+        id: show-issue-list
+        run: echo "issues=(gh issue list -l ${LABEL_NAME})" >> $GITHUB_OUTPUT
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LABEL_NAME: ${{ github.event.inputs.label-name }}
+      - name: get reactions in issues
+        run: >
+          grep -o "^\d+" | while read issue_id; do
+            gh api -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /repos/${GITHUB_REPOSITORY}/issues/${issue_id}/reactions
+          done
+        env:
+            GITHUB_REPOSITORY: ${{ github.repository }}
