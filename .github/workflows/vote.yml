@@ -1,0 +1,15 @@
+name: vote
+
+on:
+  workflow_dispatch:
+
+jobs:
+  count:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: show issue list
+      run: gh issue list
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
