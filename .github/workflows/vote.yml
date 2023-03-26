@@ -2,6 +2,10 @@ name: vote
 
 on:
   workflow_dispatch:
+    inputs:
+      label-name:
+        type: string
+        required: true
 
 jobs:
   count:
@@ -12,7 +16,7 @@ jobs:
         with:
           fetch-depth: 2
       - name: show issue list
-        run: gh issue list
+        run: gh issue list -l "${LABEL_NAME}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
+          LABEL_NAME: ${{ github.event.inputs.label-name }}
