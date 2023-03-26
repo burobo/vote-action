@@ -21,7 +21,7 @@ jobs:
         id: show-issue-list
         run: |
             issues=$(gh issue list -l ${LABEL_NAME})
-            echo $issues | grep -o "^\d+" | while read issue_id; do
+            echo $issues | grep -E "^[0-9]+" | while read issue_id; do
                 gh api -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /repos/${GITHUB_REPOSITORY}/issues/${issue_id}/reactions
             done
         env:
