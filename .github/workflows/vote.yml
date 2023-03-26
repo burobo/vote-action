@@ -23,6 +23,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LABEL_NAME: ${{ github.event.inputs.label-name }}
+      - name: echo result
+        run: echo $issues
       - name: get reactions in issues
         run: >
           grep -o "^\d+" $issues | while read issue_id; do
