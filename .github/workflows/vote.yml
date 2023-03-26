@@ -20,7 +20,7 @@ jobs:
       - name: get reactions for issues
         id: show-issue-list
         run: |
-            issues=(gh issue list -l ${LABEL_NAME})
+            issues=$(gh issue list -l ${LABEL_NAME})
             echo $issues
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
