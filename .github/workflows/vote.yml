@@ -21,7 +21,7 @@ jobs:
         id: show-issue-list
         run: |
             issues=`gh issue list -l ${LABEL_NAME} --json number,title | jq -r '.[] | [.number, .title] |@csv'`
-            echo issues
+            echo $issues
             echo $issues | while read issue; do
                 IFS=, split_issue=(${issue})
                 vote_count=`gh api -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /repos/${GITHUB_REPOSITORY}/issues/${split_issue[0]}/reactions | jq '[.[] | select(.content == "heart")] | length'`
