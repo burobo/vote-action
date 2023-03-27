@@ -21,6 +21,7 @@ jobs:
         id: show-issue-list
         run: |
             issues=$(gh issue list -l ${LABEL_NAME})
+            echo $issues
             echo $issues | grep -o -E "^[0-9]+" | while read issue_id; do
                 vote_count=`gh api -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /repos/${GITHUB_REPOSITORY}/issues/${issue_id}/reactions | jq '[.[] | select(.content == "heart")] | length'`
                 echo $issue_id
