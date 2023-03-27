@@ -23,7 +23,9 @@ jobs:
             issues=$(gh issue list -l ${LABEL_NAME})
             echo $issues | grep -o -E "^[0-9]+" | while read issue_id; do
                 vote_count=`gh api -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /repos/${GITHUB_REPOSITORY}/issues/${issue_id}/reactions | jq '[.[] | select(.content == "heart")] | length'`
-                echo "${heart_count} ${issue_id}" >> vote_count.txt
+                echo $issue_id
+                echo $vote_count
+                echo "${vote_count} ${issue_id}" >> vote_count.txt
             done
             sort -n -r vote_count.txt | awk '{print "rank:" NR " issue:" $2 " vote_count:" $1 }'
         env:
