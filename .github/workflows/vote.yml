@@ -20,13 +20,12 @@ jobs:
       - name: get reactions for issues
         id: show-issue-list
         run: |
-            issues=`gh issue list -l ${LABEL_NAME} --json number,title | jq -r '.[] | [.number, .title] |@csv'`
-            echo $issues
-            echo $issues | while read issue; do
+            gh issue list -l ${LABEL_NAME} --json number,title | jq -r '.[] | [.number, .title] | @csv' >> issue_list.csv
+            while read issue; do
                 IFS=, split_issue=(${issue})
                 vote_count=`gh api -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /repos/${GITHUB_REPOSITORY}/issues/${split_issue[0]}/reactions | jq '[.[] | select(.content == "heart")] | length'`
                 echo "${vote_count} ${split_issue[0]} ${split_issue[1]}" >> vote_count.txt
-            done
+            done < issue_list.csv
             cat vote_count.txt
             sort -n -r vote_count.txt | awk '{print "rank:" NR " issue:" $2 " title:" $3 " vote_count:" $1 }'
         env:
